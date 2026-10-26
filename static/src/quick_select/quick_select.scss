@@ -1,0 +1,188 @@
+// Only theme variables: the same rules work in Odoo's light and dark modes.
+
+.o_quick_select_dialog {
+    .o_quick_select_layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 1rem;
+
+        @include media-breakpoint-down(lg) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .o_quick_select_main,
+    .o_quick_select_order {
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        background-color: var(--bs-body-bg);
+        min-width: 0;
+    }
+
+    .o_quick_select_tabs {
+        display: flex;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--bs-border-color);
+
+        button {
+            flex: 1;
+            min-width: 140px;
+            padding: 0.75rem;
+            border: 0;
+            border-bottom: 3px solid transparent;
+            background: none;
+            color: var(--bs-secondary-color);
+            text-align: start;
+
+            b {
+                display: block;
+                color: var(--bs-body-color);
+                font-weight: 500;
+            }
+
+            small {
+                font-size: 0.8125rem;
+            }
+
+            &[aria-selected="true"] {
+                border-bottom-color: var(--bs-primary);
+
+                b {
+                    color: var(--bs-primary);
+                }
+            }
+        }
+    }
+
+    .o_quick_select_pane {
+        padding: 1rem;
+    }
+
+    .o_quick_select_hint,
+    .o_quick_select_muted {
+        color: var(--bs-secondary-color);
+        font-size: 0.8125rem;
+    }
+
+    .o_quick_select_hint {
+        margin: 0;
+    }
+
+    .o_quick_select_empty {
+        padding: 1.5rem 1rem;
+        color: var(--bs-secondary-color);
+        text-align: center;
+    }
+
+    .o_quick_select_toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .o_quick_select_bar {
+        display: inline-block;
+        height: 6px;
+        margin-inline-end: 0.375rem;
+        border-radius: 3px;
+        background-color: var(--bs-primary);
+        vertical-align: middle;
+    }
+
+    .o_quick_select_add {
+        display: inline-flex;
+        gap: 0.375rem;
+
+        input {
+            width: 4.5rem;
+            text-align: end;
+        }
+    }
+
+    // Order summary (right column)
+    .o_quick_select_order {
+        align-self: start;
+
+        h2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 0;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--bs-border-color);
+            font-size: 1rem;
+            font-weight: 500;
+
+            small {
+                color: var(--bs-secondary-color);
+                font-weight: 400;
+            }
+        }
+    }
+
+    .o_quick_select_lines {
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    .o_quick_select_line {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid var(--bs-border-color);
+        font-size: 0.8125rem;
+
+        &.o_quick_select_flash {
+            animation: o_quick_select_flash 0.8s ease-out;
+        }
+    }
+
+    .o_quick_select_line_qty,
+    .o_quick_select_line_amount {
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    .o_quick_select_line_amount {
+        min-width: 5.5rem;
+    }
+
+    .o_quick_select_totals {
+        padding: 0.75rem 1rem;
+
+        > div {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.125rem 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .o_quick_select_total {
+            margin-top: 0.375rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--bs-border-color);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .o_quick_select_line.o_quick_select_flash {
+            animation: none;
+        }
+    }
+}
+
+@keyframes o_quick_select_flash {
+    from {
+        background-color: rgba(var(--bs-primary-rgb), 0.15);
+    }
+    to {
+        background-color: transparent;
+    }
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="jaua_quick_product_select.QuickSelectDialog">
+        <Dialog title.translate="Quick selection" size="'xl'" contentClass="'o_quick_select_dialog'">
+            <div class="o_quick_select_layout">
+                <section class="o_quick_select_main">
+                    <div class="o_quick_select_tabs" role="tablist">
+                        <t t-foreach="tabs" t-as="tab" t-key="tab.id">
+                            <button type="button" role="tab"
+                                    t-att-aria-selected="state.tab === tab.id ? 'true' : 'false'"
+                                    t-on-click="() => state.tab = tab.id">
+                                <b t-esc="tab.title"/>
+                                <small t-esc="tab.subtitle"/>
+                            </button>
+                        </t>
+                    </div>
+                    <div class="o_quick_select_pane" role="tabpanel">
+                        <FrequentPanel t-if="state.tab === 'frequent'"
+                                       record="record"
+                                       busy="state.busy"
+                                       addLines.bind="addLines"
+                                       repeatLastOrder.bind="repeatLastOrder"
+                                       formatAmount.bind="formatAmount"/>
+                    </div>
+                </section>
+
+                <aside class="o_quick_select_order">
+                    <h2>
+                        <span>Order lines</span>
+                        <small t-if="productCount === 1">1 product</small>
+                        <small t-else=""><t t-esc="formatQty(productCount)"/> products</small>
+                    </h2>
+                    <div class="o_quick_select_lines">
+                        <div t-if="!orderLines.length" class="o_quick_select_empty">
+                            Products you add will appear here.
+                        </div>
+                        <div t-foreach="orderLines" t-as="line" t-key="line.id"
+                             class="o_quick_select_line"
+                             t-att-class="{ 'o_quick_select_flash': state.lastProductIds.includes(line.productId) }">
+                            <span class="o_quick_select_line_name" t-esc="line.name"/>
+                            <span class="o_quick_select_line_qty" t-esc="formatQty(line.qty)"/>
+                            <span class="o_quick_select_line_amount" t-esc="formatAmount(line.subtotal)"/>
+                        </div>
+                    </div>
+                    <div class="o_quick_select_totals">
+                        <div><span>Untaxed amount</span><span t-esc="formatAmount(record.data.amount_untaxed)"/></div>
+                        <div><span>Taxes</span><span t-esc="formatAmount(record.data.amount_tax)"/></div>
+                        <div class="o_quick_select_total"><span>Total</span><span t-esc="formatAmount(record.data.amount_total)"/></div>
+                    </div>
+                </aside>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-primary" t-on-click="props.close">Done</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

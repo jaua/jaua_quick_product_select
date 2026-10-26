@@ -1,0 +1,115 @@
+import { Component, useState } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { formatFloat } from "@web/core/utils/numbers";
+import { formatMonetary } from "@web/views/fields/formatters";
+import { FrequentPanel } from "./frequent_panel";
+
+export class QuickSelectDialog extends Component {
+    static template = "jaua_quick_product_select.QuickSelectDialog";
+    static components = { Dialog, FrequentPanel };
+    static props = {
+        record: Object,
+        config: Object,
+        close: Function,
+    };
+
+    setup() {
+        this.orm = useService("orm");
+        this.notification = useService("notification");
+        this.state = useState({
+            tab: "frequent",
+            busy: false,
+            lastProductIds: [],
+        });
+    }
+
+    get tabs() {
+        return [
+            {
+                id: "frequent",
+                title: _t("Frequent products"),
+                subtitle: _t("For recurring orders"),
+            },
+        ];
+    }
+
+    get record() {
+        return this.props.record;
+    }
+
+    get currencyId() {
+        return this.record.data.currency_id && this.record.data.currency_id[0];
+    }
+
+    get orderLines() {
+        const { linesField, qtyField } = this.props.config;
+        return this.record.data[linesField].records
+            .filter((line) => !line.data.display_type && line.data.product_id)
+            .map((line) => ({
+                id: line.id,
+                productId: line.data.product_id[0],
+                name: line.data.product_id[1],
+                qty: line.data[qtyField],
+                subtotal: line.data.price_subtotal,
+            }));
+    }
+
+    get productCount() {
+        return this.orderLines.reduce((total, line) => total + line.qty, 0);
+    }
+
+    formatAmount(value) {
+        return formatMonetary(value, { currencyId: this.currencyId });
+    }
+
+    formatQty(value) {
+        return formatFloat(value, { trailingZeros: false });
+    }
+
+    /**
+     * Add ``[{product_id, qty, price_unit?}]`` on the server, then reload the
+     * form so the order lines, taxes and totals shown are Odoo's own.
+     */
+    async addLines(items) {
+        return this.runOnOrder("quick_add_lines", [items]);
+    }
+
+    async repeatLastOrder() {
+        const result = await this.runOnOrder("quick_repeat_last_order", []);
+        if (result) {
+            this.notification.add(_t("Last order %s added", result.source_order), { type: "success" });
+        }
+        return result;
+    }
+
+    async runOnOrder(method, args) {
+        if (this.state.busy) {
+            return false;
+        }
+        this.state.busy = true;
+        try {
+            if (!(await this.record.save())) {
+                return false;
+            }
+            const result = await this.orm.call(this.record.resModel, method, [[this.record.resId], ...args]);
+            await this.record.load();
+            this.state.lastProductIds = result.added.map((item) => item.product_id);
+            if (method === "quick_add_lines") {
+                for (const item of result.added) {
+                    this.notification.add(
+                        _t("Added: %(qty)s × %(product)s", {
+                            qty: this.formatQty(item.qty),
+                            product: item.name,
+                        }),
+                        { type: "success" }
+                    );
+                }
+            }
+            return result;
+        } finally {
+            this.state.busy = false;
+        }
+    }
+}

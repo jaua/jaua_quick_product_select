@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="jaua_quick_product_select.QuickSelectButton">
+        <button type="button"
+                class="btn btn-secondary o_quick_select_button mb-2"
+                t-att-disabled="!isAvailable"
+                t-att-title="buttonTitle"
+                t-on-click="open">
+            <i class="fa fa-bolt me-1" aria-hidden="true"/>
+            <span>Quick selection</span>
+            <kbd class="ms-2 d-none d-md-inline" t-esc="hotkeyLabel"/>
+        </button>
+    </t>
+</templates>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="jaua_quick_product_select.FrequentPanel">
+        <div class="o_quick_select_frequent">
+            <div t-if="state.loading" class="o_quick_select_empty">
+                <i class="fa fa-circle-o-notch fa-spin me-1" aria-hidden="true"/> Loading purchase history…
+            </div>
+            <div t-elif="!state.products.length" class="o_quick_select_empty">
+                This customer has no confirmed orders in the configured period.
+                Use the product search to find what you need.
+            </div>
+            <t t-else="">
+                <div class="o_quick_select_toolbar">
+                    <p class="o_quick_select_hint">
+                        <t t-if="state.lastOrder">
+                            Last order <b t-esc="state.lastOrder.name"/>, <t t-esc="relativeDate(state.lastOrder.date)"/>.
+                        </t>
+                        Sorted by the number of orders that included the product.
+                    </p>
+                    <button type="button" class="btn btn-secondary"
+                            t-att-disabled="props.busy or !state.lastOrder"
+                            t-on-click="() => props.repeatLastOrder()">
+                        <i class="fa fa-repeat me-1" aria-hidden="true"/> Repeat last order
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle o_quick_select_table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Frequency</th>
+                                <th>Last purchase</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="state.products" t-as="product" t-key="product.product_id">
+                                <td>
+                                    <span t-esc="product.name"/>
+                                    <div class="o_quick_select_muted" t-if="product.default_code" t-esc="product.default_code"/>
+                                </td>
+                                <td class="text-nowrap">
+                                    <span class="o_quick_select_bar" t-attf-style="width: {{ barWidth(product) }}px"/>
+                                    <t t-esc="timesLabel(product)"/>
+                                </td>
+                                <td class="text-nowrap o_quick_select_muted" t-esc="relativeDate(product.last_date)"/>
+                                <td class="text-end text-nowrap">
+                                    <span t-esc="props.formatAmount(product.price)"/>
+                                    <div class="o_quick_select_muted" t-esc="secondaryPrice(product)"/>
+                                </td>
+                                <td class="text-end">
+                                    <div class="o_quick_select_add">
+                                        <input type="text" inputmode="decimal"
+                                               class="form-control form-control-sm"
+                                               aria-label="Quantity"
+                                               t-model="state.qty[product.product_id]"
+                                               t-on-keydown="(ev) => this.onQtyKeydown(ev, product)"/>
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                                t-att-disabled="props.busy"
+                                                t-on-click="() => this.add(product)">Add</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
