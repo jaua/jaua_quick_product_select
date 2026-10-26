@@ -6,8 +6,10 @@
                 <i class="fa fa-circle-o-notch fa-spin me-1" aria-hidden="true"/> Loading purchase history…
             </div>
             <div t-elif="!state.products.length" class="o_quick_select_empty">
-                This customer has no confirmed orders in the configured period.
-                Use the product search to find what you need.
+                <p>This customer has no confirmed orders in the configured period.</p>
+                <button type="button" class="btn btn-secondary" t-on-click="() => props.onUseSearch()">
+                    <i class="fa fa-search me-1" aria-hidden="true"/> Use the command search
+                </button>
             </div>
             <t t-else="">
                 <div class="o_quick_select_toolbar">

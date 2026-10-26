@@ -15,12 +15,19 @@
                         </t>
                     </div>
                     <div class="o_quick_select_pane" role="tabpanel">
+                        <SearchPanel t-if="state.tab === 'search'"
+                                     record="record"
+                                     busy="state.busy"
+                                     addLines.bind="addLines"
+                                     formatAmount.bind="formatAmount"
+                                     formatQty.bind="formatQty"/>
                         <FrequentPanel t-if="state.tab === 'frequent'"
                                        record="record"
                                        busy="state.busy"
                                        addLines.bind="addLines"
                                        repeatLastOrder.bind="repeatLastOrder"
-                                       formatAmount.bind="formatAmount"/>
+                                       formatAmount.bind="formatAmount"
+                                       onUseSearch="() => state.tab = 'search'"/>
                     </div>
                 </section>
 

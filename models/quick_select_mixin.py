@@ -124,6 +124,12 @@ class QuickSelectMixin(models.AbstractModel):
     def _quick_line_field(self):
         return 'order_line'
 
+    @api.model
+    def _quick_product_name(self, product):
+        """Name with variant values but without "[reference]": the dialog
+        shows the reference separately."""
+        return product.with_context(display_default_code=False).display_name
+
     # ------------------------------------------------------------------
     # Model A: frequent products of the customer
     # ------------------------------------------------------------------
@@ -167,7 +173,7 @@ class QuickSelectMixin(models.AbstractModel):
             use_last = settings['price_policy'] == 'last_price' and line
             result['products'].append({
                 'product_id': product.id,
-                'name': product.display_name,
+                'name': self._quick_product_name(product),
                 'default_code': product.default_code or '',
                 'times': times,
                 'last_date': line and fields.Datetime.to_string(line.order_id.date_order),
@@ -335,7 +341,7 @@ class QuickSelectMixin(models.AbstractModel):
             'top_sellers': top_sellers,
             'results': [{
                 'product_id': product.id,
-                'name': product.display_name,
+                'name': self._quick_product_name(product),
                 'default_code': product.default_code or '',
                 'category': product.categ_id.display_name or '',
                 'price': prices.get(product.id, 0.0),
@@ -384,5 +390,5 @@ class QuickSelectMixin(models.AbstractModel):
                 if price is not None:
                     vals['price_unit'] = price
                 Line.create(vals)
-            added.append({'product_id': product.id, 'name': product.display_name, 'qty': qty, 'merged': bool(target)})
+            added.append({'product_id': product.id, 'name': self._quick_product_name(product), 'qty': qty, 'merged': bool(target)})
         return {'added': added}

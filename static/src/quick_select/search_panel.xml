@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="jaua_quick_product_select.SearchPanel">
+        <div class="o_quick_select_search">
+            <p class="o_quick_select_hint mb-2">
+                Type a name, internal reference or barcode. Put the quantity first: <kbd>3 rj45</kbd>.
+                Use <kbd>↑</kbd> <kbd>↓</kbd> and <kbd>Enter</kbd> to add, <kbd>Esc</kbd> to clear.
+            </p>
+            <div class="o_quick_select_command">
+                <i class="fa fa-search" aria-hidden="true"/>
+                <input t-ref="input" type="text" autocomplete="off" spellcheck="false"
+                       class="form-control"
+                       placeholder="e.g. 2 ip camera, cat6, bracket…"
+                       aria-label="Search product"
+                       t-att-value="state.term"
+                       t-on-input="onInput"
+                       t-on-keydown="onKeydown"/>
+                <span t-if="state.qty !== 1" class="o_quick_select_qty_tag" t-esc="qtyLabel"/>
+            </div>
+
+            <div t-if="state.topSellers and state.results.length" class="o_quick_select_muted mt-2">
+                Best sellers
+            </div>
+            <ul t-if="state.results.length" class="o_quick_select_results" role="listbox">
+                <li t-foreach="state.results" t-as="result" t-key="result.product_id"
+                    role="option"
+                    t-att-aria-selected="result_index === state.active ? 'true' : 'false'"
+                    t-att-class="{ 'o_quick_select_active': result_index === state.active }"
+                    t-on-mouseenter="() => this.setActive(result_index)"
+                    t-on-click="() => this.add(result)">
+                    <span class="o_quick_select_result_name">
+                        <t t-foreach="segments(result.name)" t-as="segment" t-key="segment_index">
+                            <mark t-if="segment.match" t-esc="segment.text"/>
+                            <t t-else="" t-esc="segment.text"/>
+                        </t>
+                    </span>
+                    <span class="o_quick_select_result_price" t-esc="props.formatAmount(result.price)"/>
+                    <span class="o_quick_select_muted">
+                        <t t-if="result.default_code" t-esc="result.default_code"/>
+                        <t t-if="result.default_code and result.category"> · </t>
+                        <t t-esc="result.category"/>
+                    </span>
+                </li>
+            </ul>
+            <div t-elif="!state.loading and state.searchedTerm" class="o_quick_select_empty">
+                No product matches "<t t-esc="state.searchedTerm"/>". Try the internal reference.
+            </div>
+            <div t-elif="!state.loading" class="o_quick_select_empty">
+                No sales in the configured period yet. Type to search the catalog.
+            </div>
+        </div>
+    </t>
+</templates>

@@ -15,6 +15,7 @@ export class FrequentPanel extends Component {
         addLines: Function,
         repeatLastOrder: Function,
         formatAmount: Function,
+        onUseSearch: Function,
     };
 
     setup() {

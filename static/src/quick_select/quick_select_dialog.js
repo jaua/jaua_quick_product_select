@@ -5,10 +5,11 @@ import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/core/utils/numbers";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { FrequentPanel } from "./frequent_panel";
+import { SearchPanel } from "./search_panel";
 
 export class QuickSelectDialog extends Component {
     static template = "jaua_quick_product_select.QuickSelectDialog";
-    static components = { Dialog, FrequentPanel };
+    static components = { Dialog, FrequentPanel, SearchPanel };
     static props = {
         record: Object,
         config: Object,
@@ -19,7 +20,7 @@ export class QuickSelectDialog extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.state = useState({
-            tab: "frequent",
+            tab: "search",
             busy: false,
             lastProductIds: [],
         });
@@ -27,6 +28,11 @@ export class QuickSelectDialog extends Component {
 
     get tabs() {
         return [
+            {
+                id: "search",
+                title: _t("Command search"),
+                subtitle: _t("For keyboard entry"),
+            },
             {
                 id: "frequent",
                 title: _t("Frequent products"),
