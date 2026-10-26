@@ -1,0 +1,399 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* jaua_quick_product_select
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-26 02:21+0000\n"
+"PO-Revision-Date: 2026-10-26 02:21+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_MX\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "\". Try the internal reference."
+msgstr "\". Prueba con la referencia interna."
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.js:0
+msgid "%s orders"
+msgstr "%s pedidos"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.js:0
+msgid "%s units"
+msgstr "%s unidades"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid ""
+".\n"
+"                Use"
+msgstr ""
+".\n"
+"                Usa"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.js:0
+msgid "1 order"
+msgstr "1 pedido"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "1 product"
+msgstr "1 producto"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "3 rj45"
+msgstr "3 rj45"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Add"
+msgstr "Agregar"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.js:0
+msgid "Added: %(qty)s × %(product)s"
+msgstr "Agregado: %(qty)s × %(product)s"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "Best sellers"
+msgstr "Más vendidos"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:jaua_quick_product_select.res_config_settings_view_form
+msgid "Command search"
+msgstr "Buscador de comandos"
+
+#. module: jaua_quick_product_select
+#: model:ir.model,name:jaua_quick_product_select.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: jaua_quick_product_select
+#: model:ir.model.fields.selection,name:jaua_quick_product_select.selection__res_config_settings__quick_select_price_policy__pricelist
+msgid "Customer pricelist"
+msgstr "Lista de precios del cliente"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "Done"
+msgstr "Listo"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "Enter"
+msgstr "Enter"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "Esc"
+msgstr "Esc"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.js:0
+msgid "For keyboard entry"
+msgstr "Para captura con teclado"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.js:0
+msgid "For recurring orders"
+msgstr "Para pedidos recurrentes"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Frequency"
+msgstr "Frecuencia"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.js:0
+#: model_terms:ir.ui.view,arch_db:jaua_quick_product_select.res_config_settings_view_form
+msgid "Frequent products"
+msgstr "Frecuentes del cliente"
+
+#. module: jaua_quick_product_select
+#: model:ir.model.fields,field_description:jaua_quick_product_select.field_res_config_settings__quick_select_history_months
+msgid "Frequent products period (months)"
+msgstr "Periodo de historial (meses)"
+
+#. module: jaua_quick_product_select
+#: model:ir.model.fields,field_description:jaua_quick_product_select.field_res_config_settings__quick_select_price_policy
+msgid "Frequent products price"
+msgstr "Precio en frecuentes"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Last order"
+msgstr "Último pedido"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.js:0
+msgid "Last order %s added"
+msgstr "Último pedido %s agregado"
+
+#. module: jaua_quick_product_select
+#: model:ir.model.fields.selection,name:jaua_quick_product_select.selection__res_config_settings__quick_select_price_policy__last_price
+msgid "Last price paid by the customer"
+msgstr "Último precio pagado por el cliente"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Last purchase"
+msgstr "Última compra"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Loading purchase history…"
+msgstr "Cargando historial de compras…"
+
+#. module: jaua_quick_product_select
+#: model_terms:ir.ui.view,arch_db:jaua_quick_product_select.res_config_settings_view_form
+msgid "Maximum number of products listed by the quick search"
+msgstr "Número máximo de productos que muestra el buscador"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "No product matches \""
+msgstr "Ningún producto coincide con \""
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "No sales in the configured period yet. Type to search the catalog."
+msgstr ""
+"Aún no hay ventas en el periodo configurado. Escribe para buscar en el "
+"catálogo."
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "Order lines"
+msgstr "Líneas del pedido"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Price"
+msgstr "Precio"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Product"
+msgstr "Producto"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "Products you add will appear here."
+msgstr "Los productos que agregues aparecerán aquí."
+
+#. module: jaua_quick_product_select
+#: model_terms:ir.ui.view,arch_db:jaua_quick_product_select.res_config_settings_view_form
+msgid "Purchase history used by the Frequent products tab"
+msgstr "Historial de compras que usa la pestaña Frecuentes del cliente"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: jaua_quick_product_select
+#: model_terms:ir.ui.view,arch_db:jaua_quick_product_select.res_config_settings_view_form
+msgid "Quick Product Selection"
+msgstr "Selección rápida de productos"
+
+#. module: jaua_quick_product_select
+#: model:ir.model,name:jaua_quick_product_select.model_quick_select_mixin
+msgid "Quick product selection"
+msgstr "Selección rápida de productos"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_button.xml:0
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "Quick selection"
+msgstr "Selección rápida"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_button.js:0
+msgid "Quick selection (%s)"
+msgstr "Selección rápida (%s)"
+
+#. module: jaua_quick_product_select
+#. odoo-python
+#: code:addons/jaua_quick_product_select/models/quick_select_mixin.py:0
+msgid ""
+"Quick selection is only available for quotations that are not confirmed yet."
+msgstr ""
+"La selección rápida solo está disponible en cotizaciones que aún no se "
+"confirman."
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Repeat last order"
+msgstr "Repetir último pedido"
+
+#. module: jaua_quick_product_select
+#: model:ir.model,name:jaua_quick_product_select.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de venta"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "Search product"
+msgstr "Buscar producto"
+
+#. module: jaua_quick_product_select
+#: model:ir.model.fields,field_description:jaua_quick_product_select.field_res_config_settings__quick_select_search_limit
+msgid "Search results"
+msgstr "Resultados del buscador"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Sorted by the number of orders that included the product."
+msgstr "Ordenado por el número de pedidos que incluyeron el producto."
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "Taxes"
+msgstr "Impuestos"
+
+#. module: jaua_quick_product_select
+#. odoo-python
+#: code:addons/jaua_quick_product_select/models/quick_select_mixin.py:0
+msgid "The last order of this customer has no products that can be added."
+msgstr ""
+"El último pedido de este cliente no tiene productos que se puedan agregar."
+
+#. module: jaua_quick_product_select
+#. odoo-python
+#: code:addons/jaua_quick_product_select/models/quick_select_mixin.py:0
+msgid "The quantity must be greater than zero."
+msgstr "La cantidad debe ser mayor que cero."
+
+#. module: jaua_quick_product_select
+#. odoo-python
+#: code:addons/jaua_quick_product_select/models/quick_select_mixin.py:0
+msgid "The selected product is not available for this document."
+msgstr "El producto seleccionado no está disponible para este documento."
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "This customer has no confirmed orders in the configured period."
+msgstr "Este cliente no tiene pedidos confirmados en el periodo configurado."
+
+#. module: jaua_quick_product_select
+#. odoo-python
+#: code:addons/jaua_quick_product_select/models/quick_select_mixin.py:0
+msgid "This customer has no confirmed orders to repeat."
+msgstr "Este cliente no tiene pedidos confirmados para repetir."
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "Total"
+msgstr "Total"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "Type a name, internal reference or barcode. Put the quantity first:"
+msgstr ""
+"Escribe el nombre, la referencia interna o el código de barras. Pon la "
+"cantidad al inicio:"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "Untaxed amount"
+msgstr "Subtotal"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
+msgid "Use the command search"
+msgstr "Usar el buscador de comandos"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "and"
+msgstr "y"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "e.g. 2 ip camera, cat6, bracket…"
+msgstr "Ej. 2 cámara ip, cat6, soporte…"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.js:0
+msgid "last %s"
+msgstr "último %s"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.js:0
+msgid "list %s"
+msgstr "lista %s"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/quick_select_dialog.xml:0
+msgid "products"
+msgstr "productos"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "to add,"
+msgstr "para agregar,"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "to clear."
+msgstr "para limpiar."
