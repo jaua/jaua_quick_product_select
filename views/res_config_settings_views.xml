@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.quick.product.select</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='quotation_order_setting_container']" position="after">
+                <block title="Quick Product Selection" name="quick_product_select_setting_container">
+                    <setting id="quick_select_frequent"
+                             string="Frequent products"
+                             help="Purchase history used by the Frequent products tab">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="quick_select_history_months" class="col-lg-5 o_light_label"/>
+                                <field name="quick_select_history_months" class="col-lg-2"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="quick_select_price_policy" class="col-lg-5 o_light_label"/>
+                                <field name="quick_select_price_policy" class="col-lg-6"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="quick_select_search"
+                             string="Command search"
+                             help="Maximum number of products listed by the quick search">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="quick_select_search_limit" class="col-lg-5 o_light_label"/>
+                                <field name="quick_select_search_limit" class="col-lg-2"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
