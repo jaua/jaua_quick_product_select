@@ -1,6 +1,6 @@
 {
     'name': 'Selección rápida de productos',
-    'version': '18.0.1.1.1',
+    'version': '18.0.1.1.2',
     'summary': 'Captura rápida de productos en órdenes de venta: frecuentes del cliente y buscador de comandos',
     'author': 'JAUA SyTI',
     'website': 'https://app.jauamx.com',

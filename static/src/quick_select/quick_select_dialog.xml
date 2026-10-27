@@ -42,7 +42,7 @@
                             <small t-if="productCount === 1">1 product</small>
                             <small t-else=""><t t-esc="formatQty(productCount)"/> products</small>
                             <small t-if="!state.showOrder" class="o_quick_select_folded_total"
-                                   t-esc="formatAmount(record.data.amount_total)"/>
+                                   t-esc="formatAmount(totals.total)"/>
                             <i t-if="env.isSmall" class="fa ms-2"
                                t-att-class="state.showOrder ? 'fa-chevron-up' : 'fa-chevron-down'" aria-hidden="true"/>
                         </button>
@@ -60,9 +60,9 @@
                         </div>
                     </div>
                     <div t-if="state.showOrder" class="o_quick_select_totals">
-                        <div><span>Untaxed amount</span><span t-esc="formatAmount(record.data.amount_untaxed)"/></div>
-                        <div><span>Taxes</span><span t-esc="formatAmount(record.data.amount_tax)"/></div>
-                        <div class="o_quick_select_total"><span>Total</span><span t-esc="formatAmount(record.data.amount_total)"/></div>
+                        <div><span>Untaxed amount</span><span t-esc="formatAmount(totals.untaxed)"/></div>
+                        <div><span>Taxes</span><span t-esc="formatAmount(totals.tax)"/></div>
+                        <div class="o_quick_select_total"><span>Total</span><span t-esc="formatAmount(totals.total)"/></div>
                     </div>
                 </aside>
             </div>

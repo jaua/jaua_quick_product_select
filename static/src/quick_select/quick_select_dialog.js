@@ -64,6 +64,27 @@ export class QuickSelectDialog extends Component {
             }));
     }
 
+    /**
+     * Untaxed / tax / total of the document. The sale order form does not
+     * load amount_untaxed / amount_tax / amount_total (only list views do):
+     * it shows the ``tax_totals`` summary, which is read here. Documents
+     * without it fall back to the sum of their lines.
+     */
+    get totals() {
+        const summary = this.record.data.tax_totals;
+        if (summary && typeof summary === "object" && "total_amount_currency" in summary) {
+            return {
+                untaxed: summary.base_amount_currency,
+                tax: summary.tax_amount_currency,
+                total: summary.total_amount_currency,
+            };
+        }
+        const lines = this.record.data[this.props.config.linesField].records;
+        const untaxed = lines.reduce((sum, line) => sum + (line.data.price_subtotal || 0), 0);
+        const total = lines.reduce((sum, line) => sum + (line.data.price_total || 0), 0);
+        return { untaxed, tax: total - untaxed, total };
+    }
+
     /** Quantity of each product already on the order, for the tile badges. */
     get orderQty() {
         const qty = {};
