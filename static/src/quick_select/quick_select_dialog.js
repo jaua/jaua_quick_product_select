@@ -22,6 +22,8 @@ export class QuickSelectDialog extends Component {
         this.state = useState({
             tab: "search",
             busy: false,
+            // On phones the order summary starts folded to leave room for products.
+            showOrder: !this.env.isSmall,
             lastProductIds: [],
         });
     }
@@ -60,6 +62,15 @@ export class QuickSelectDialog extends Component {
                 qty: line.data[qtyField],
                 subtotal: line.data.price_subtotal,
             }));
+    }
+
+    /** Quantity of each product already on the order, for the tile badges. */
+    get orderQty() {
+        const qty = {};
+        for (const line of this.orderLines) {
+            qty[line.productId] = (qty[line.productId] || 0) + line.qty;
+        }
+        return qty;
     }
 
     get productCount() {

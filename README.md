@@ -6,7 +6,16 @@ Acelera la captura de productos en las órdenes de venta de Odoo 18 Community.
   cantidad va al inicio (`3 rj45`, `3x rj45`, `2.5 cable`). Todas las palabras
   deben coincidir, en cualquier orden, sin importar acentos ni mayúsculas.
   `↑` `↓` para moverse, `Enter` agrega, `Esc` limpia (con el campo vacío
-  cierra). Sin texto muestra los más vendidos.
+  cierra).
+- **Categorías y cuadrícula con imágenes** (el "modelo C, botones por
+  categoría" de la especificación, integrado en el buscador en lugar de una
+  pestaña aparte): botones con las categorías de primer nivel (hijas directas
+  de la raíz) que tienen productos vendibles; una sola activa a la vez, se
+  desactiva al tocarla de nuevo. Con el campo vacío se muestra una cuadrícula
+  con imagen: **Recientes** (últimos productos que agregó ese vendedor, modo
+  inicial) o **Más vendidos** del periodo, ambos filtrados por la categoría
+  activa. Cada imagen indica cuántas unidades lleva ya la orden. En el móvil el
+  diálogo ocupa toda la pantalla y el resumen del pedido se pliega.
 - **Frecuentes del cliente**: productos que más ha comprado la empresa del
   cliente (todos sus contactos comparten historial), por número de pedidos
   confirmados en el periodo configurado. "Repetir último pedido" agrega todas
@@ -73,3 +82,6 @@ la búsqueda funciona pero distingue acentos.
   reglas de registro. No se usa `sudo()` salvo para leer los tres ajustes del
   módulo (`ir.config_parameter` solo lo leen administradores).
 - Los productos combo no se ofrecen: sus componentes se arman en el formulario.
+- "Recientes" sale de las líneas que creó el usuario (`create_uid`), sin tabla
+  adicional; en empate de fecha (líneas de una misma operación) decide el id
+  de línea más reciente.

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 02:21+0000\n"
-"PO-Revision-Date: 2026-10-26 02:21+0000\n"
+"POT-Creation-Date: 2026-10-27 04:54+0000\n"
+"PO-Revision-Date: 2026-10-27 04:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_MX\n"
@@ -15,12 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: jaua_quick_product_select
-#. odoo-javascript
-#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
-msgid "\". Try the internal reference."
-msgstr "\". Prueba con la referencia interna."
 
 #. module: jaua_quick_product_select
 #. odoo-javascript
@@ -79,6 +73,12 @@ msgstr "Agregado: %(qty)s × %(product)s"
 #: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
 msgid "Best sellers"
 msgstr "Más vendidos"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "Categories"
+msgstr "Categorías"
 
 #. module: jaua_quick_product_select
 #. odoo-javascript
@@ -186,13 +186,13 @@ msgstr "Número máximo de productos que muestra el buscador"
 
 #. module: jaua_quick_product_select
 #. odoo-javascript
-#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
-msgid "No product matches \""
-msgstr "Ningún producto coincide con \""
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.js:0
+msgid "No product matches \"%s\". Try the internal reference."
+msgstr "Ningún producto coincide con \"%s\". Prueba con la referencia interna."
 
 #. module: jaua_quick_product_select
 #. odoo-javascript
-#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.js:0
 msgid "No sales in the configured period yet. Type to search the catalog."
 msgstr ""
 "Aún no hay ventas en el periodo configurado. Escribe para buscar en el "
@@ -264,6 +264,12 @@ msgid ""
 msgstr ""
 "La selección rápida solo está disponible en cotizaciones que aún no se "
 "confirman."
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.xml:0
+msgid "Recent"
+msgstr "Recientes"
 
 #. module: jaua_quick_product_select
 #. odoo-javascript
@@ -355,6 +361,12 @@ msgstr "Subtotal"
 #: code:addons/jaua_quick_product_select/static/src/quick_select/frequent_panel.xml:0
 msgid "Use the command search"
 msgstr "Usar el buscador de comandos"
+
+#. module: jaua_quick_product_select
+#. odoo-javascript
+#: code:addons/jaua_quick_product_select/static/src/quick_select/search_panel.js:0
+msgid "You have not added products yet. Try the best sellers."
+msgstr "Aún no has agregado productos. Prueba con los más vendidos."
 
 #. module: jaua_quick_product_select
 #. odoo-javascript

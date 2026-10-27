@@ -6,6 +6,11 @@ import { highlightSegments } from "./highlight";
 
 const SEARCH_DELAY = 200;
 
+/**
+ * Command search with first-level category filters. With text it lists the
+ * matches; with an empty field it shows image tiles of the user's recent
+ * products or the best sellers (the "buttons by category" model).
+ */
 export class SearchPanel extends Component {
     static template = "jaua_quick_product_select.SearchPanel";
     static props = {
@@ -14,6 +19,7 @@ export class SearchPanel extends Component {
         addLines: Function,
         formatAmount: Function,
         formatQty: Function,
+        orderQty: Object,
     };
 
     setup() {
@@ -27,13 +33,21 @@ export class SearchPanel extends Component {
             qty: 1,
             searchedTerm: "",
             results: [],
-            topSellers: true,
+            mode: "recent",
+            resultMode: "recent",
+            categories: [],
+            categoryId: false,
             active: 0,
             loading: false,
         });
         this.requestId = 0;
         this.debouncedSearch = useDebounced(this.search, SEARCH_DELAY);
-        onWillStart(() => this.search());
+        onWillStart(() => Promise.all([this.loadCategories(), this.search()]));
+    }
+
+    async loadCategories() {
+        const { record } = this.props;
+        this.state.categories = await this.orm.call(record.resModel, "quick_get_categories", [[record.resId]]);
     }
 
     async search() {
@@ -41,10 +55,10 @@ export class SearchPanel extends Component {
         const { record } = this.props;
         const input = this.state.term;
         this.state.loading = true;
-        const data = await this.orm.call(record.resModel, "quick_search_products", [
-            [record.resId],
-            input,
-        ]);
+        const data = await this.orm.call(record.resModel, "quick_search_products", [[record.resId], input], {
+            category_id: this.state.categoryId || false,
+            mode: this.state.mode,
+        });
         // Ignore answers to searches typed over by a newer one.
         if (requestId !== this.requestId) {
             return;
@@ -54,10 +68,19 @@ export class SearchPanel extends Component {
             qty: data.qty,
             searchedTerm: data.term,
             results: data.results,
-            topSellers: data.top_sellers,
+            resultMode: data.mode,
             active: 0,
             loading: false,
         });
+    }
+
+    searchNow() {
+        this.debouncedSearch.cancel();
+        return this.search();
+    }
+
+    get isGrid() {
+        return this.state.resultMode !== "search";
     }
 
     get words() {
@@ -68,8 +91,42 @@ export class SearchPanel extends Component {
         return _t("%s units", this.props.formatQty(this.state.qty));
     }
 
+    get emptyMessage() {
+        if (this.state.resultMode === "search") {
+            return _t('No product matches "%s". Try the internal reference.', this.state.searchedTerm);
+        }
+        if (this.state.resultMode === "recent") {
+            return _t("You have not added products yet. Try the best sellers.");
+        }
+        return _t("No sales in the configured period yet. Type to search the catalog.");
+    }
+
     segments(text) {
         return highlightSegments(text, this.words);
+    }
+
+    imageUrl(result) {
+        const unique = encodeURIComponent(result.image_unique || "");
+        return `/web/image/product.product/${result.product_id}/image_128?unique=${unique}`;
+    }
+
+    focusInput() {
+        this.inputRef.el?.focus();
+    }
+
+    selectCategory(categoryId) {
+        // Single active filter: tapping the active one turns it off.
+        this.state.categoryId = this.state.categoryId === categoryId ? false : categoryId;
+        this.searchNow();
+        this.focusInput();
+    }
+
+    setMode(mode) {
+        if (this.state.mode !== mode) {
+            this.state.mode = mode;
+            this.searchNow();
+        }
+        this.focusInput();
     }
 
     onInput(ev) {
@@ -95,16 +152,18 @@ export class SearchPanel extends Component {
     }
 
     clear() {
-        this.debouncedSearch.cancel();
         this.state.term = "";
         if (this.inputRef.el) {
             this.inputRef.el.value = "";
-            this.inputRef.el.focus();
         }
-        this.search();
+        this.focusInput();
+        this.searchNow();
     }
 
     async onKeydown(ev) {
+        // Left/right move between tiles only while the field is empty, so
+        // they keep moving the text cursor when typing.
+        const gridMove = this.isGrid && !this.state.term;
         switch (ev.key) {
             case "ArrowDown":
                 ev.preventDefault();
@@ -114,12 +173,23 @@ export class SearchPanel extends Component {
                 ev.preventDefault();
                 this.setActive(this.state.active - 1);
                 break;
+            case "ArrowRight":
+                if (gridMove) {
+                    ev.preventDefault();
+                    this.setActive(this.state.active + 1);
+                }
+                break;
+            case "ArrowLeft":
+                if (gridMove) {
+                    ev.preventDefault();
+                    this.setActive(this.state.active - 1);
+                }
+                break;
             case "Enter":
                 ev.preventDefault();
                 // Make sure Enter acts on the results of what is typed now.
                 if (this.state.searchedInput !== this.state.term) {
-                    this.debouncedSearch.cancel();
-                    await this.search();
+                    await this.searchNow();
                 }
                 await this.add(this.state.results[this.state.active]);
                 break;

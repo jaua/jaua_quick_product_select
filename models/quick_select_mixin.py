@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
@@ -12,6 +13,9 @@ DEFAULT_SEARCH_LIMIT = 8
 DEFAULT_PRICE_POLICY = 'last_price'
 # Maximum number of products listed in "Frequent products".
 FREQUENT_LIMIT = 50
+# Products shown as image tiles when the search field is empty.
+GRID_LIMIT = 24
+BROWSE_MODES = ('recent', 'top')
 # Extra candidates fetched by the raw SQL search, so that products later
 # filtered out by record rules do not leave the result list short.
 SEARCH_CANDIDATE_FACTOR = 5
@@ -105,6 +109,23 @@ class QuickSelectMixin(models.AbstractModel):
             '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
         ]
 
+    def _quick_category_ids(self, category_id):
+        """The category and all its subcategories, or None for no filter."""
+        if not category_id:
+            return None
+        return self.env['product.category'].search([('id', 'child_of', int(category_id))]).ids
+
+    def _quick_line_product_domain(self, category_id=None):
+        """Line domain keeping only products that can be offered now."""
+        domain = [
+            ('product_id.active', '=', True),
+            ('product_id.' + self._quick_product_ok_field, '=', True),
+            ('product_id.type', '!=', 'combo'),
+        ]
+        if category_id:
+            domain.append(('product_id.categ_id', 'child_of', int(category_id)))
+        return domain
+
     def _quick_pricelist_prices(self, products, qty):
         """Unit price of each product for ``qty`` in the document currency."""
         raise NotImplementedError
@@ -143,10 +164,7 @@ class QuickSelectMixin(models.AbstractModel):
             return result
 
         Line = self.env[self._quick_line_model]
-        domain = self._quick_history_domain(partner) + [
-            ('product_id.active', '=', True),
-            ('product_id.' + self._quick_product_ok_field, '=', True),
-        ]
+        domain = self._quick_history_domain(partner) + self._quick_line_product_domain()
         groups = Line._read_group(
             domain, ['product_id'], ['order_id:count_distinct'],
             order='order_id:count_distinct desc, product_id', limit=FREQUENT_LIMIT,
@@ -255,7 +273,7 @@ class QuickSelectMixin(models.AbstractModel):
         self.env.cr.execute("SELECT 1 FROM pg_extension WHERE extname = 'unaccent'")
         return bool(self.env.cr.fetchone())
 
-    def _quick_search_product_ids(self, text, limit):
+    def _quick_search_product_ids(self, text, limit, category_id=None):
         """Product ids whose name, internal reference or barcode contain every
         word of ``text``, ignoring case and accents.
 
@@ -274,6 +292,8 @@ class QuickSelectMixin(models.AbstractModel):
             def norm(expr):
                 return expr
 
+        category_ids = self._quick_category_ids(category_id)
+        category_filter = SQL("pt.categ_id = ANY(%s)", category_ids) if category_ids is not None else SQL("TRUE")
         lang = self.env.lang or 'en_US'
         name = SQL("COALESCE(pt.name->>%s, pt.name->>'en_US')", lang)
         conditions = []
@@ -293,12 +313,14 @@ class QuickSelectMixin(models.AbstractModel):
              WHERE pp.active AND pt.active AND %(ok)s
                AND pt.type != 'combo'
                AND (pt.company_id IS NULL OR pt.company_id = %(company)s)
+               AND %(category_filter)s
                AND %(conditions)s
              ORDER BY lower(pp.default_code) = lower(%(text)s) DESC, %(name)s, pp.id
              LIMIT %(limit)s
             """,
             ok=SQL.identifier('pt', self._quick_product_ok_field),
             company=self.company_id.id,
+            category_filter=category_filter,
             conditions=SQL(" AND ").join(conditions),
             text=text,
             name=name,
@@ -310,35 +332,73 @@ class QuickSelectMixin(models.AbstractModel):
         ).ids)
         return [pid for pid in candidate_ids if pid in allowed][:limit]
 
-    def _quick_top_seller_ids(self, limit):
-        """Best sellers of the period across all customers (empty search)."""
+    def _quick_top_seller_ids(self, limit, category_id=None):
+        """Best sellers of the period across all customers."""
         groups = self.env[self._quick_line_model]._read_group(
-            self._quick_history_domain() + [
-                ('product_id.active', '=', True),
-                ('product_id.' + self._quick_product_ok_field, '=', True),
-                ('product_id.type', '!=', 'combo'),
-            ],
+            self._quick_history_domain() + self._quick_line_product_domain(category_id),
             ['product_id'], ['order_id:count_distinct'],
             order='order_id:count_distinct desc, product_id', limit=limit,
         )
         return [product.id for product, _count in groups]
 
-    def quick_search_products(self, term, limit=None):
+    def _quick_recent_product_ids(self, limit, category_id=None):
+        """Products the current user added to documents most recently, in any
+        state, taken from the lines they created (no extra table needed)."""
+        groups = self.env[self._quick_line_model]._read_group(
+            self._quick_line_base_domain() + self._quick_line_product_domain(category_id) + [
+                ('create_uid', '=', self.env.uid),
+                ('company_id', '=', self.company_id.id),
+            ],
+            ['product_id'], ['create_date:max', 'id:max'],
+            # create_date is the transaction start: lines added together tie,
+            # so the newest line id breaks the tie.
+            order='create_date:max desc, id:max desc', limit=limit,
+        )
+        return [product.id for product, _date, _line_id in groups]
+
+    def quick_get_categories(self):
+        """First-level product categories (children of the root ones) that
+        contain products that can be offered, with how many they contain."""
         self.ensure_one()
-        limit = limit or self._quick_settings()['search_limit']
+        groups = self.env['product.template']._read_group(
+            [(self._quick_product_ok_field, '=', True), ('type', '!=', 'combo'),
+             '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)],
+            ['categ_id'], ['__count'],
+        )
+        counts = defaultdict(int)
+        for category, count in groups:
+            # parent_path "1/112/530/": the second id is the first-level ancestor.
+            path = [part for part in (category.parent_path or '').split('/') if part]
+            if len(path) >= 2:
+                counts[int(path[1])] += count
+        categories = self.env['product.category'].browse(list(counts)).exists()
+        return sorted(
+            [{'id': c.id, 'name': ' '.join(c.name.split()), 'count': counts[c.id]} for c in categories],
+            key=lambda c: c['name'].lower(),
+        )
+
+    def quick_search_products(self, term, limit=None, category_id=None, mode='recent'):
+        """Search results for ``term``; with an empty term, the products to
+        browse: the user's recent ones (``mode='recent'``) or the best sellers
+        (``mode='top'``). ``category_id`` restricts both to a category tree."""
+        self.ensure_one()
         qty, text = self._quick_parse_term(term)
-        top_sellers = not text
-        if top_sellers:
-            product_ids = self._quick_top_seller_ids(limit)
+        if text:
+            mode = 'search'
+            limit = limit or self._quick_settings()['search_limit']
+            product_ids = self._quick_search_product_ids(text, limit, category_id)
         else:
-            product_ids = self._quick_search_product_ids(text, limit)
+            mode = mode if mode in BROWSE_MODES else 'recent'
+            limit = limit or GRID_LIMIT
+            finder = self._quick_recent_product_ids if mode == 'recent' else self._quick_top_seller_ids
+            product_ids = finder(limit, category_id)
 
         products = self.env['product.product'].browse(product_ids)
         prices = self._quick_pricelist_prices(products, qty)
         return {
             'qty': qty,
             'term': text,
-            'top_sellers': top_sellers,
+            'mode': mode,
             'results': [{
                 'product_id': product.id,
                 'name': self._quick_product_name(product),
@@ -346,6 +406,8 @@ class QuickSelectMixin(models.AbstractModel):
                 'category': product.categ_id.display_name or '',
                 'price': prices.get(product.id, 0.0),
                 'uom': product.uom_id.name,
+                # Cache key for /web/image: the image lives on the template.
+                'image_unique': fields.Datetime.to_string(product.product_tmpl_id.write_date),
             } for product in products],
         }
 

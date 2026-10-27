@@ -20,7 +20,8 @@
                                      busy="state.busy"
                                      addLines.bind="addLines"
                                      formatAmount.bind="formatAmount"
-                                     formatQty.bind="formatQty"/>
+                                     formatQty.bind="formatQty"
+                                     orderQty="orderQty"/>
                         <FrequentPanel t-if="state.tab === 'frequent'"
                                        record="record"
                                        busy="state.busy"
@@ -33,11 +34,20 @@
 
                 <aside class="o_quick_select_order">
                     <h2>
-                        <span>Order lines</span>
-                        <small t-if="productCount === 1">1 product</small>
-                        <small t-else=""><t t-esc="formatQty(productCount)"/> products</small>
+                        <button type="button" class="o_quick_select_order_toggle"
+                                t-att-aria-expanded="state.showOrder ? 'true' : 'false'"
+                                t-att-disabled="!env.isSmall"
+                                t-on-click="() => state.showOrder = !state.showOrder">
+                            <span>Order lines</span>
+                            <small t-if="productCount === 1">1 product</small>
+                            <small t-else=""><t t-esc="formatQty(productCount)"/> products</small>
+                            <small t-if="!state.showOrder" class="o_quick_select_folded_total"
+                                   t-esc="formatAmount(record.data.amount_total)"/>
+                            <i t-if="env.isSmall" class="fa ms-2"
+                               t-att-class="state.showOrder ? 'fa-chevron-up' : 'fa-chevron-down'" aria-hidden="true"/>
+                        </button>
                     </h2>
-                    <div class="o_quick_select_lines">
+                    <div t-if="state.showOrder" class="o_quick_select_lines">
                         <div t-if="!orderLines.length" class="o_quick_select_empty">
                             Products you add will appear here.
                         </div>
@@ -49,7 +59,7 @@
                             <span class="o_quick_select_line_amount" t-esc="formatAmount(line.subtotal)"/>
                         </div>
                     </div>
-                    <div class="o_quick_select_totals">
+                    <div t-if="state.showOrder" class="o_quick_select_totals">
                         <div><span>Untaxed amount</span><span t-esc="formatAmount(record.data.amount_untaxed)"/></div>
                         <div><span>Taxes</span><span t-esc="formatAmount(record.data.amount_tax)"/></div>
                         <div class="o_quick_select_total"><span>Total</span><span t-esc="formatAmount(record.data.amount_total)"/></div>

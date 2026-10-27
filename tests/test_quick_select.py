@@ -19,11 +19,19 @@ class TestQuickSelect(TransactionCase):
         cls.contact_b = cls.env['res.partner'].create({'name': 'Beto', 'parent_id': cls.company_partner.id})
         cls.other_customer = cls.env['res.partner'].create({'name': 'Despacho Ruiz', 'is_company': True})
 
+        Category = cls.env['product.category']
+        cls.root_category = Category.search([('parent_id', '=', False)], limit=1)
+        cls.cat_video = Category.create({'name': 'Videovigilancia  QS', 'parent_id': cls.root_category.id})
+        cls.cat_cameras = Category.create({'name': 'Cámaras', 'parent_id': cls.cat_video.id})
+        cls.cat_network = Category.create({'name': 'Redes QS', 'parent_id': cls.root_category.id})
+
         Product = cls.env['product.product']
-        cls.camera = Product.create({'name': 'Cámara IP domo 4 MP', 'default_code': 'CAM-IP-4MP', 'list_price': 1180.0})
+        cls.camera = Product.create({'name': 'Cámara IP domo 4 MP', 'default_code': 'CAM-IP-4MP', 'list_price': 1180.0,
+                                     'categ_id': cls.cat_cameras.id})
         cls.rj45 = Product.create({'name': 'Conectores RJ45 Cat6 (100 pzs)', 'default_code': 'RJ45-CAT6-100',
-                                   'list_price': 420.0, 'barcode': '7501234567890'})
-        cls.cable = Product.create({'name': 'Bobina cable UTP Cat6 305 m', 'default_code': 'CAB-CAT6-305', 'list_price': 2890.0})
+                                   'list_price': 420.0, 'barcode': '7501234567890', 'categ_id': cls.cat_network.id})
+        cls.cable = Product.create({'name': 'Bobina cable UTP Cat6 305 m', 'default_code': 'CAB-CAT6-305', 'list_price': 2890.0,
+                                    'categ_id': cls.cat_network.id})
         cls.not_for_sale = Product.create({'name': 'Cámara interna de prueba', 'default_code': 'CAM-INT', 'sale_ok': False})
 
     def _confirmed_order(self, partner, lines, months_ago=0):
@@ -109,11 +117,49 @@ class TestQuickSelect(TransactionCase):
         self._confirmed_order(self.contact_a, [(self.rj45, 1, 420.0), (self.cable, 1, 2890.0)])
         order = self._quotation()
         self.assertEqual(len(order.quick_search_products('cat6', limit=1)['results']), 1)
-        result = order.quick_search_products('', limit=1000)
-        self.assertTrue(result['top_sellers'])
+        result = order.quick_search_products('', limit=1000, mode='top')
+        self.assertEqual(result['mode'], 'top')
         ids = [r['product_id'] for r in result['results']]
         # Two orders for RJ45, one for the cable (demo data may add others).
         self.assertLess(ids.index(self.rj45.id), ids.index(self.cable.id))
+
+    # Categories and browsing ----------------------------------------------
+
+    def test_first_level_categories(self):
+        categories = {c['id']: c for c in self._quotation().quick_get_categories()}
+        # Products of a subcategory count for its first-level ancestor.
+        self.assertEqual(categories[self.cat_video.id]['count'], 1)
+        self.assertEqual(categories[self.cat_video.id]['name'], 'Videovigilancia QS')
+        self.assertEqual(categories[self.cat_network.id]['count'], 2)
+        self.assertNotIn(self.cat_cameras.id, categories)
+
+    def test_search_filtered_by_category(self):
+        order = self._quotation()
+        ids = [r['product_id'] for r in order.quick_search_products('ca', category_id=self.cat_network.id)['results']]
+        self.assertIn(self.cable.id, ids)
+        self.assertNotIn(self.camera.id, ids)
+        ids = [r['product_id'] for r in order.quick_search_products('ca', category_id=self.cat_video.id)['results']]
+        self.assertEqual(ids, [self.camera.id])
+
+    def test_recent_products_of_current_user(self):
+        order = self._quotation()
+        order.quick_add_lines([{'product_id': self.cable.id, 'qty': 1}])
+        order.quick_add_lines([{'product_id': self.camera.id, 'qty': 1}])
+        # Lines created by another user are not "my recent" products.
+        other_user = self.env['res.users'].create({
+            'name': 'Otro vendedor', 'login': 'otro_vendedor_qs',
+            'groups_id': [(6, 0, [self.env.ref('sales_team.group_sale_salesman').id])],
+        })
+        other_order = self.env['sale.order'].with_user(other_user).create({'partner_id': self.contact_a.id})
+        other_order.quick_add_lines([{'product_id': self.rj45.id, 'qty': 1}])
+
+        result = self._quotation().quick_search_products('', mode='recent')
+        ids = [r['product_id'] for r in result['results']]
+        self.assertEqual(result['mode'], 'recent')
+        self.assertLess(ids.index(self.camera.id), ids.index(self.cable.id))
+        self.assertNotIn(self.rj45.id, ids)
+        filtered = self._quotation().quick_search_products('', mode='recent', category_id=self.cat_video.id)
+        self.assertEqual([r['product_id'] for r in filtered['results']], [self.camera.id])
 
     # Adding lines --------------------------------------------------------
 

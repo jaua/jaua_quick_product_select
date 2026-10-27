@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="jaua_quick_product_select.SearchPanel">
         <div class="o_quick_select_search">
-            <p class="o_quick_select_hint mb-2">
+            <p class="o_quick_select_hint mb-2 d-none d-md-block">
                 Type a name, internal reference or barcode. Put the quantity first: <kbd>3 rj45</kbd>.
                 Use <kbd>↑</kbd> <kbd>↓</kbd> and <kbd>Enter</kbd> to add, <kbd>Esc</kbd> to clear.
             </p>
@@ -18,36 +18,74 @@
                 <span t-if="state.qty !== 1" class="o_quick_select_qty_tag" t-esc="qtyLabel"/>
             </div>
 
-            <div t-if="state.topSellers and state.results.length" class="o_quick_select_muted mt-2">
-                Best sellers
+            <div t-if="state.categories.length" class="o_quick_select_categories" role="group" aria-label="Categories">
+                <button t-foreach="state.categories" t-as="category" t-key="category.id"
+                        type="button"
+                        t-att-aria-pressed="state.categoryId === category.id ? 'true' : 'false'"
+                        t-att-title="category.name"
+                        t-on-click="() => this.selectCategory(category.id)">
+                    <t t-esc="category.name"/>
+                </button>
             </div>
-            <ul t-if="state.results.length" class="o_quick_select_results" role="listbox">
-                <li t-foreach="state.results" t-as="result" t-key="result.product_id"
-                    role="option"
-                    t-att-aria-selected="result_index === state.active ? 'true' : 'false'"
-                    t-att-class="{ 'o_quick_select_active': result_index === state.active }"
-                    t-on-mouseenter="() => this.setActive(result_index)"
-                    t-on-click="() => this.add(result)">
-                    <span class="o_quick_select_result_name">
-                        <t t-foreach="segments(result.name)" t-as="segment" t-key="segment_index">
-                            <mark t-if="segment.match" t-esc="segment.text"/>
-                            <t t-else="" t-esc="segment.text"/>
-                        </t>
-                    </span>
-                    <span class="o_quick_select_result_price" t-esc="props.formatAmount(result.price)"/>
-                    <span class="o_quick_select_muted">
-                        <t t-if="result.default_code" t-esc="result.default_code"/>
-                        <t t-if="result.default_code and result.category"> · </t>
-                        <t t-esc="result.category"/>
-                    </span>
-                </li>
-            </ul>
-            <div t-elif="!state.loading and state.searchedTerm" class="o_quick_select_empty">
-                No product matches "<t t-esc="state.searchedTerm"/>". Try the internal reference.
+
+            <div t-if="!state.term" class="o_quick_select_modes" role="group">
+                <button type="button" class="btn btn-sm"
+                        t-att-class="state.mode === 'recent' ? 'btn-primary' : 'btn-secondary'"
+                        t-att-aria-pressed="state.mode === 'recent' ? 'true' : 'false'"
+                        t-on-click="() => this.setMode('recent')">
+                    <i class="fa fa-history me-1" aria-hidden="true"/> Recent
+                </button>
+                <button type="button" class="btn btn-sm"
+                        t-att-class="state.mode === 'top' ? 'btn-primary' : 'btn-secondary'"
+                        t-att-aria-pressed="state.mode === 'top' ? 'true' : 'false'"
+                        t-on-click="() => this.setMode('top')">
+                    <i class="fa fa-line-chart me-1" aria-hidden="true"/> Best sellers
+                </button>
             </div>
-            <div t-elif="!state.loading" class="o_quick_select_empty">
-                No sales in the configured period yet. Type to search the catalog.
-            </div>
+
+            <t t-if="state.results.length">
+                <!-- Empty field: image tiles (recent / best sellers) -->
+                <div t-if="isGrid" class="o_quick_select_grid" role="listbox">
+                    <button t-foreach="state.results" t-as="result" t-key="result.product_id"
+                            type="button" role="option"
+                            class="o_quick_select_tile"
+                            t-att-class="{ 'o_quick_select_active': result_index === state.active }"
+                            t-att-aria-selected="result_index === state.active ? 'true' : 'false'"
+                            t-att-disabled="props.busy"
+                            t-on-click="() => this.add(result)">
+                        <span t-if="props.orderQty[result.product_id]" class="o_quick_select_badge"
+                              t-esc="props.formatQty(props.orderQty[result.product_id])"/>
+                        <img t-att-src="imageUrl(result)" alt="" loading="lazy"/>
+                        <span class="o_quick_select_tile_name" t-esc="result.name"/>
+                        <span class="o_quick_select_muted" t-if="result.default_code" t-esc="result.default_code"/>
+                        <span class="o_quick_select_tile_price" t-esc="props.formatAmount(result.price)"/>
+                    </button>
+                </div>
+                <!-- Typed search: list -->
+                <ul t-else="" class="o_quick_select_results" role="listbox">
+                    <li t-foreach="state.results" t-as="result" t-key="result.product_id"
+                        role="option"
+                        t-att-aria-selected="result_index === state.active ? 'true' : 'false'"
+                        t-att-class="{ 'o_quick_select_active': result_index === state.active }"
+                        t-on-mouseenter="() => this.setActive(result_index)"
+                        t-on-click="() => this.add(result)">
+                        <img t-att-src="imageUrl(result)" alt="" loading="lazy"/>
+                        <span class="o_quick_select_result_name">
+                            <t t-foreach="segments(result.name)" t-as="segment" t-key="segment_index">
+                                <mark t-if="segment.match" t-esc="segment.text"/>
+                                <t t-else="" t-esc="segment.text"/>
+                            </t>
+                        </span>
+                        <span class="o_quick_select_result_price" t-esc="props.formatAmount(result.price)"/>
+                        <span class="o_quick_select_muted">
+                            <t t-if="result.default_code" t-esc="result.default_code"/>
+                            <t t-if="result.default_code and result.category"> · </t>
+                            <t t-esc="result.category"/>
+                        </span>
+                    </li>
+                </ul>
+            </t>
+            <div t-elif="!state.loading" class="o_quick_select_empty" t-esc="emptyMessage"/>
         </div>
     </t>
 </templates>
