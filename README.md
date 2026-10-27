@@ -11,7 +11,9 @@ Acelera la captura de productos en las órdenes de venta de Odoo 18 Community.
   categoría" de la especificación, integrado en el buscador en lugar de una
   pestaña aparte): botones con las categorías de primer nivel (hijas directas
   de la raíz) que tienen productos vendibles; una sola activa a la vez, se
-  desactiva al tocarla de nuevo. Con el campo vacío se muestra una cuadrícula
+  desactiva al tocarla de nuevo. Están replegadas tras el botón "Categorías"
+  (el navegador recuerda si se prefieren desplegadas); la categoría activa se
+  muestra como etiqueta con ✕ para quitar el filtro. Con el campo vacío se muestra una cuadrícula
   con imagen: **Recientes** (últimos productos que agregó ese vendedor, modo
   inicial) o **Más vendidos** del periodo, ambos filtrados por la categoría
   activa. Cada imagen indica cuántas unidades lleva ya la orden. En el móvil el

@@ -18,7 +18,40 @@
                 <span t-if="state.qty !== 1" class="o_quick_select_qty_tag" t-esc="qtyLabel"/>
             </div>
 
-            <div t-if="state.categories.length" class="o_quick_select_categories" role="group" aria-label="Categories">
+            <div class="o_quick_select_toolbar_row">
+                <div class="o_quick_select_filter">
+                    <button t-if="state.categories.length" type="button" class="btn btn-sm btn-secondary"
+                            t-att-aria-expanded="state.showCategories ? 'true' : 'false'"
+                            t-on-click="toggleCategories">
+                        <i class="fa fa-tags me-1" aria-hidden="true"/> Categories
+                        <i class="fa ms-1" t-att-class="state.showCategories ? 'fa-chevron-up' : 'fa-chevron-down'" aria-hidden="true"/>
+                    </button>
+                    <span t-if="activeCategory" class="o_quick_select_filter_tag">
+                        <span t-esc="activeCategory.name"/>
+                        <button type="button" class="btn btn-link p-0" title="Remove filter" aria-label="Remove filter"
+                                t-on-click="() => this.selectCategory(activeCategory.id)">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </button>
+                    </span>
+                </div>
+                <div t-if="!state.term" class="o_quick_select_modes" role="group">
+                    <button type="button" class="btn btn-sm"
+                            t-att-class="state.mode === 'recent' ? 'btn-primary' : 'btn-secondary'"
+                            t-att-aria-pressed="state.mode === 'recent' ? 'true' : 'false'"
+                            t-on-click="() => this.setMode('recent')">
+                        <i class="fa fa-history me-1" aria-hidden="true"/> Recent
+                    </button>
+                    <button type="button" class="btn btn-sm"
+                            t-att-class="state.mode === 'top' ? 'btn-primary' : 'btn-secondary'"
+                            t-att-aria-pressed="state.mode === 'top' ? 'true' : 'false'"
+                            t-on-click="() => this.setMode('top')">
+                        <i class="fa fa-line-chart me-1" aria-hidden="true"/> Best sellers
+                    </button>
+                </div>
+            </div>
+
+            <div t-if="state.showCategories and state.categories.length" class="o_quick_select_categories"
+                 role="group" aria-label="Categories">
                 <button t-foreach="state.categories" t-as="category" t-key="category.id"
                         type="button"
                         t-att-aria-pressed="state.categoryId === category.id ? 'true' : 'false'"
@@ -26,21 +59,6 @@
                         t-on-click="() => this.selectCategory(category.id)">
                     <i t-if="state.categoryId === category.id" class="fa fa-check me-1" aria-hidden="true"/>
                     <t t-esc="category.name"/>
-                </button>
-            </div>
-
-            <div t-if="!state.term" class="o_quick_select_modes" role="group">
-                <button type="button" class="btn btn-sm"
-                        t-att-class="state.mode === 'recent' ? 'btn-primary' : 'btn-secondary'"
-                        t-att-aria-pressed="state.mode === 'recent' ? 'true' : 'false'"
-                        t-on-click="() => this.setMode('recent')">
-                    <i class="fa fa-history me-1" aria-hidden="true"/> Recent
-                </button>
-                <button type="button" class="btn btn-sm"
-                        t-att-class="state.mode === 'top' ? 'btn-primary' : 'btn-secondary'"
-                        t-att-aria-pressed="state.mode === 'top' ? 'true' : 'false'"
-                        t-on-click="() => this.setMode('top')">
-                    <i class="fa fa-line-chart me-1" aria-hidden="true"/> Best sellers
                 </button>
             </div>
 

@@ -1,10 +1,21 @@
 import { Component, onWillStart, useRef, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { highlightSegments } from "./highlight";
 
 const SEARCH_DELAY = 200;
+// Per-browser preference: keep the category buttons unfolded or not.
+const SHOW_CATEGORIES_KEY = "jaua_quick_product_select.show_categories";
+
+function readShowCategories() {
+    try {
+        return browser.localStorage.getItem(SHOW_CATEGORIES_KEY) === "1";
+    } catch {
+        return false;
+    }
+}
 
 /**
  * Command search with first-level category filters. With text it lists the
@@ -37,6 +48,7 @@ export class SearchPanel extends Component {
             resultMode: "recent",
             categories: [],
             categoryId: false,
+            showCategories: readShowCategories(),
             active: 0,
             loading: false,
         });
@@ -114,9 +126,27 @@ export class SearchPanel extends Component {
         this.inputRef.el?.focus();
     }
 
+    get activeCategory() {
+        return this.state.categories.find((category) => category.id === this.state.categoryId);
+    }
+
+    toggleCategories() {
+        this.state.showCategories = !this.state.showCategories;
+        try {
+            browser.localStorage.setItem(SHOW_CATEGORIES_KEY, this.state.showCategories ? "1" : "0");
+        } catch {
+            // Storage unavailable (private mode): the toggle still works for this dialog.
+        }
+    }
+
     selectCategory(categoryId) {
         // Single active filter: tapping the active one turns it off.
         this.state.categoryId = this.state.categoryId === categoryId ? false : categoryId;
+        // Fold again unless the user chose to keep the buttons unfolded; the
+        // active category stays visible as a tag next to the toggle.
+        if (!readShowCategories()) {
+            this.state.showCategories = false;
+        }
         this.searchNow();
         this.focusInput();
     }
