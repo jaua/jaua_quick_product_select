@@ -293,9 +293,23 @@
         padding-bottom: 0.25rem;
         scrollbar-width: thin;
 
+        // From tablet width up the buttons wrap and are justified: each full
+        // row stretches them to the dialog width, and the ::after spacer takes
+        // the free space of the last row so it stays left-aligned, like the
+        // last line of justified text.
         @include media-breakpoint-up(md) {
             flex-wrap: wrap;
             overflow-x: visible;
+
+            button {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+
+            &::after {
+                content: "";
+                flex: 1000 1 0;
+            }
         }
 
         button {
