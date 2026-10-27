@@ -24,6 +24,7 @@
                         t-att-aria-pressed="state.categoryId === category.id ? 'true' : 'false'"
                         t-att-title="category.name"
                         t-on-click="() => this.selectCategory(category.id)">
+                    <i t-if="state.categoryId === category.id" class="fa fa-check me-1" aria-hidden="true"/>
                     <t t-esc="category.name"/>
                 </button>
             </div>

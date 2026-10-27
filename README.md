@@ -81,6 +81,11 @@ la búsqueda funciona pero distingue acentos.
   candidatos pasan después por `search()`, así que se respetan permisos y
   reglas de registro. No se usa `sudo()` salvo para leer los tres ajustes del
   módulo (`ir.config_parameter` solo lo leen administradores).
+- Estilos solo con variables SCSS de Odoo/Bootstrap (`$primary`,
+  `$border-color`, `$o-view-background-color`…). El backend de Odoo 18 no
+  define las variables CSS de Bootstrap (`--bs-*`), así que no deben usarse.
+  Odoo Community no tiene modo oscuro en el backend (lo agrega `web_enterprise`);
+  si existiera, recompila estas mismas variables con sus valores oscuros.
 - Los productos combo no se ofrecen: sus componentes se arman en el formulario.
 - "Recientes" sale de las líneas que creó el usuario (`create_uid`), sin tabla
   adicional; en empate de fecha (líneas de una misma operación) decide el id

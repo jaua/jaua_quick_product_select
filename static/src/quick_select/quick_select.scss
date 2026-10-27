@@ -1,4 +1,5 @@
-// Only theme variables: the same rules work in Odoo's light and dark modes.
+// Only Odoo/Bootstrap SCSS variables: the backend does not define Bootstrap CSS
+// custom properties (--bs-*), and the dark bundle recompiles these with its own values.
 
 .o_quick_select_dialog {
     .o_quick_select_layout {
@@ -13,16 +14,16 @@
 
     .o_quick_select_main,
     .o_quick_select_order {
-        border: 1px solid var(--bs-border-color);
-        border-radius: var(--bs-border-radius);
-        background-color: var(--bs-body-bg);
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        background-color: $o-view-background-color;
         min-width: 0;
     }
 
     .o_quick_select_tabs {
         display: flex;
         overflow-x: auto;
-        border-bottom: 1px solid var(--bs-border-color);
+        border-bottom: 1px solid $border-color;
 
         button {
             flex: 1;
@@ -31,12 +32,12 @@
             border: 0;
             border-bottom: 3px solid transparent;
             background: none;
-            color: var(--bs-secondary-color);
+            color: $text-muted;
             text-align: start;
 
             b {
                 display: block;
-                color: var(--bs-body-color);
+                color: $o-main-text-color;
                 font-weight: 500;
             }
 
@@ -45,10 +46,10 @@
             }
 
             &[aria-selected="true"] {
-                border-bottom-color: var(--bs-primary);
+                border-bottom-color: $primary;
 
                 b {
-                    color: var(--bs-primary);
+                    color: $primary;
                 }
             }
         }
@@ -60,7 +61,7 @@
 
     .o_quick_select_hint,
     .o_quick_select_muted {
-        color: var(--bs-secondary-color);
+        color: $text-muted;
         font-size: 0.8125rem;
     }
 
@@ -70,7 +71,7 @@
 
     .o_quick_select_empty {
         padding: 1.5rem 1rem;
-        color: var(--bs-secondary-color);
+        color: $text-muted;
         text-align: center;
     }
 
@@ -88,7 +89,7 @@
         height: 6px;
         margin-inline-end: 0.375rem;
         border-radius: 3px;
-        background-color: var(--bs-primary);
+        background-color: $primary;
         vertical-align: middle;
     }
 
@@ -108,7 +109,7 @@
 
         h2 {
             margin: 0;
-            border-bottom: 1px solid var(--bs-border-color);
+            border-bottom: 1px solid $border-color;
             font-size: 1rem;
             font-weight: 500;
         }
@@ -135,12 +136,12 @@
             }
 
             small {
-                color: var(--bs-secondary-color);
+                color: $text-muted;
                 font-weight: 400;
             }
 
             .o_quick_select_folded_total {
-                color: var(--bs-body-color);
+                color: $o-main-text-color;
                 font-weight: 600;
             }
         }
@@ -157,7 +158,7 @@
         gap: 0.5rem;
         align-items: center;
         padding: 0.5rem 1rem;
-        border-bottom: 1px solid var(--bs-border-color);
+        border-bottom: 1px solid $border-color;
         font-size: 0.8125rem;
 
         &.o_quick_select_flash {
@@ -188,7 +189,7 @@
         .o_quick_select_total {
             margin-top: 0.375rem;
             padding-top: 0.5rem;
-            border-top: 1px solid var(--bs-border-color);
+            border-top: 1px solid $border-color;
             font-size: 1.125rem;
             font-weight: 600;
         }
@@ -203,7 +204,7 @@
 
 @keyframes o_quick_select_flash {
     from {
-        background-color: rgba(var(--bs-primary-rgb), 0.15);
+        background-color: rgba($primary, 0.15);
     }
     to {
         background-color: transparent;
@@ -220,7 +221,7 @@
             top: 50%;
             inset-inline-start: 0.875rem;
             transform: translateY(-50%);
-            color: var(--bs-secondary-color);
+            color: $text-muted;
         }
 
         input {
@@ -237,8 +238,8 @@
         transform: translateY(-50%);
         padding: 0.1875rem 0.625rem;
         border-radius: 1rem;
-        background-color: var(--bs-primary);
-        color: var(--bs-white);
+        background-color: $primary;
+        color: color-contrast($primary);
         font-size: 0.8125rem;
     }
 
@@ -246,8 +247,8 @@
         margin: 0.5rem 0 0;
         padding: 0;
         list-style: none;
-        border: 1px solid var(--bs-border-color);
-        border-radius: var(--bs-border-radius);
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
         overflow: hidden;
 
         li {
@@ -255,7 +256,7 @@
             grid-template-columns: minmax(0, 1fr) auto;
             gap: 0.125rem 0.75rem;
             padding: 0.625rem 0.875rem;
-            border-bottom: 1px solid var(--bs-border-color);
+            border-bottom: 1px solid $border-color;
             cursor: pointer;
 
             &:last-child {
@@ -263,14 +264,14 @@
             }
 
             &.o_quick_select_active {
-                background-color: rgba(var(--bs-primary-rgb), 0.12);
+                background-color: rgba($primary, 0.12);
             }
         }
 
         mark {
             padding: 0;
             background: none;
-            color: var(--bs-primary);
+            color: $primary;
             font-weight: 600;
         }
     }
@@ -300,16 +301,16 @@
         button {
             flex: none;
             padding: 0.3125rem 0.875rem;
-            border: 1px solid var(--bs-border-color);
+            border: 1px solid $border-color;
             border-radius: 1rem;
-            background-color: var(--bs-body-bg);
-            color: var(--bs-body-color);
+            background-color: $o-view-background-color;
+            color: $o-main-text-color;
             white-space: nowrap;
 
             &[aria-pressed="true"] {
-                border-color: var(--bs-primary);
-                background-color: var(--bs-primary);
-                color: var(--bs-white);
+                border-color: $primary;
+                background-color: $primary;
+                color: color-contrast($primary);
             }
         }
     }
@@ -337,19 +338,19 @@
         gap: 0.25rem;
         min-width: 0;
         padding: 0.625rem;
-        border: 1px solid var(--bs-border-color);
-        border-radius: var(--bs-border-radius-lg);
-        background-color: var(--bs-body-bg);
-        color: var(--bs-body-color);
+        border: 1px solid $border-color;
+        border-radius: $border-radius-lg;
+        background-color: $o-view-background-color;
+        color: $o-main-text-color;
         text-align: start;
 
         &:hover,
         &.o_quick_select_active {
-            border-color: var(--bs-primary);
+            border-color: $primary;
         }
 
         &.o_quick_select_active {
-            box-shadow: 0 0 0 1px var(--bs-primary);
+            box-shadow: 0 0 0 1px $primary;
         }
 
         &:active {
@@ -360,8 +361,8 @@
             width: 100%;
             aspect-ratio: 1;
             object-fit: contain;
-            border-radius: var(--bs-border-radius);
-            background-color: var(--bs-tertiary-bg);
+            border-radius: $border-radius;
+            background-color: $gray-200;
         }
     }
 
@@ -386,8 +387,8 @@
         min-width: 1.5rem;
         padding: 0.125rem 0.4375rem;
         border-radius: 0.75rem;
-        background-color: var(--bs-primary);
-        color: var(--bs-white);
+        background-color: $primary;
+        color: color-contrast($primary);
         font-size: 0.75rem;
         text-align: center;
     }
@@ -401,8 +402,8 @@
             width: 2.5rem;
             height: 2.5rem;
             object-fit: contain;
-            border-radius: var(--bs-border-radius-sm);
-            background-color: var(--bs-tertiary-bg);
+            border-radius: $border-radius-sm;
+            background-color: $gray-200;
         }
     }
 
